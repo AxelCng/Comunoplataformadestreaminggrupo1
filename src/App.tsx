@@ -13,9 +13,9 @@ import { toast } from 'sonner@2.0.3';
 import { authAPI, moviesAPI } from './utils/api';
 
 // GitHub Images Configuration
-// INSTRUCCIONES: Reemplaza esto con tu URL de GitHub
-// Formato: https://raw.githubusercontent.com/TU-USUARIO/TU-REPO/main/images/
-const GITHUB_IMAGES_BASE = 'https://github.com/AxelCng/Comunoplataformadestreaminggrupo1/tree/523c6ee5f147e43b3cac3a597cbf0d9f00322a9f/src/images';
+// URL de GitHub configurada para: AxelCng/Comunoplataformadestreaminggrupo1
+// Las imágenes están en: src/images/
+const GITHUB_IMAGES_BASE = 'https://raw.githubusercontent.com/AxelCng/Comunoplataformadestreaminggrupo1/main/src/images/';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
