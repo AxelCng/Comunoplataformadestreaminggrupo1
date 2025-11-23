@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import { Content } from './components/ContentCard';
+import { Toaster } from './components/ui/sonner';
+import { toast } from 'sonner@2.0.3';
+import { authAPI, moviesAPI } from './utils/api';
 import { Navigation } from './components/Navigation';
 import { HomePage } from './components/HomePage';
 import { WatchParty } from './components/WatchParty';
@@ -7,13 +10,7 @@ import { AccessibilitySettings } from './components/AccessibilitySettings';
 import { LoginPage } from './components/LoginPage';
 import { FriendsPage } from './components/FriendsPage';
 import { HelpButton } from './components/HelpButton';
-import { Content } from './components/ContentCard';
-import { Toaster } from './components/ui/sonner';
-import { toast } from 'sonner@2.0.3';
-import { authAPI, moviesAPI } from './utils/api';
-import chavinThumbnail from 'figma:asset/e3479e6a8734237562eca58d69c805a0272a8403.png';
-import alFondoThumbnail from 'figma:asset/1bfd68c9286ef7a29a288c7b597b32d4704bdf27.png';
-import misterioThumbnail from 'figma:asset/87d9ebefc7a54c8a8d49b56a734c7df01038e9c8.png';
+import { useState, useEffect } from 'react';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -80,7 +77,7 @@ export default function App() {
       id: '7',
       title: 'Chavín de Huantar',
       description: 'En una operación de rescate sin precedentes, comandos de élite se infiltran en una embajada sitiada por terroristas para liberar a decenas de rehenes, enfrentando un desafío que pondrá a prueba su valentía y humanidad.',
-      thumbnail: chavinThumbnail,
+      thumbnail: 'https://images.unsplash.com/photo-1567022499013-2f7dee5cf264?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       duration: '2h 15min',
       rating: 4.8,
       category: 'Película',
@@ -135,7 +132,7 @@ export default function App() {
       id: '12',
       title: 'Misterio',
       description: 'Serie peruana de drama y ficción que narra historias de la vida real con un toque de misterio. Cada episodio presenta casos basados en hechos reales que mantienen al espectador en suspenso.',
-      thumbnail: misterioThumbnail,
+      thumbnail: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       duration: '3 temporadas',
       rating: 4.7,
       category: 'Serie',
@@ -157,7 +154,7 @@ export default function App() {
       id: '14',
       title: 'Al Fondo Hay Sitio',
       description: 'La icónica sitcom peruana que retrata con humor las diferencias sociales y culturales entre las familias Gonzales y Maldini, mostrándonos las aventuras y desventuras de sus divertidos personajes.',
-      thumbnail: alFondoThumbnail,
+      thumbnail: 'https://images.unsplash.com/photo-1543839604-76538f2e3202?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
       duration: '11 temporadas',
       rating: 4.9,
       category: 'TV Show',
