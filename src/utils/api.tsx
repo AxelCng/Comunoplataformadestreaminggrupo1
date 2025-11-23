@@ -39,7 +39,22 @@ export const authAPI = {
     });
 
     if (error) {
-      throw new Error(error.message);
+      // Translate common Supabase error messages to Spanish
+      let errorMessage = error.message;
+      
+      if (error.message.includes('Invalid login credentials')) {
+        errorMessage = 'Credenciales incorrectas. Verifica tu email y contraseña';
+      } else if (error.message.includes('Email not confirmed')) {
+        errorMessage = 'Email no confirmado';
+      } else if (error.message.includes('User not found')) {
+        errorMessage = 'Usuario no encontrado';
+      } else if (error.message.includes('Invalid email')) {
+        errorMessage = 'Email inválido';
+      } else if (error.message.includes('too many requests')) {
+        errorMessage = 'Demasiados intentos. Por favor espera un momento';
+      }
+      
+      throw new Error(errorMessage);
     }
 
     return {
@@ -54,7 +69,7 @@ export const authAPI = {
     const { error } = await supabase.auth.signOut();
     
     if (error) {
-      throw new Error(error.message);
+      throw new Error('Error al cerrar sesión');
     }
   },
 
@@ -63,7 +78,7 @@ export const authAPI = {
     const { data, error } = await supabase.auth.getSession();
     
     if (error) {
-      throw new Error(error.message);
+      throw new Error('Error al obtener la sesión');
     }
 
     return {
@@ -78,7 +93,7 @@ export const authAPI = {
     const { data, error } = await supabase.auth.getUser();
     
     if (error) {
-      throw new Error(error.message);
+      throw new Error('Error al obtener el usuario');
     }
 
     return data.user;
