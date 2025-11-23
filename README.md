@@ -1,6 +1,7 @@
 
   # COMUNO - Plataforma de Streaming - Grupo 1
 
+  This is a code bundle for COMUNO - Plataforma de Streaming - Grupo 1. The original project is available at https://www.figma.com/design/KAeTfmULucT2Hozo5cTC40/COMUNO---Plataforma-de-Streaming---Grupo-1.
 
   ## Running the code
 
