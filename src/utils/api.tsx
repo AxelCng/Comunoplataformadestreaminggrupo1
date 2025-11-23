@@ -103,3 +103,48 @@ export const moviesAPI = {
     return movie;
   }
 };
+
+// Images API
+export const imagesAPI = {
+  // Upload image
+  upload: async (file: File, accessToken: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE_URL}/images/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: formData
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Error al subir imagen');
+    }
+
+    return data;
+  },
+
+  // Get signed URL for existing image
+  getUrl: async (filename: string, accessToken: string) => {
+    const response = await fetch(`${API_BASE_URL}/images/get-url`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ filename })
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Error al obtener URL');
+    }
+
+    return data;
+  }
+};

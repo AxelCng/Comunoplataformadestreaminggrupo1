@@ -1,7 +1,5 @@
+import { useState, useEffect } from 'react';
 import { Content } from './components/ContentCard';
-import { Toaster } from './components/ui/sonner';
-import { toast } from 'sonner@2.0.3';
-import { authAPI, moviesAPI } from './utils/api';
 import { Navigation } from './components/Navigation';
 import { HomePage } from './components/HomePage';
 import { WatchParty } from './components/WatchParty';
@@ -10,7 +8,10 @@ import { AccessibilitySettings } from './components/AccessibilitySettings';
 import { LoginPage } from './components/LoginPage';
 import { FriendsPage } from './components/FriendsPage';
 import { HelpButton } from './components/HelpButton';
-import { useState, useEffect } from 'react';
+import { CatalogAdmin } from './components/CatalogAdmin';
+import { Toaster } from './components/ui/sonner';
+import { toast } from 'sonner@2.0.3';
+import { authAPI, moviesAPI } from './utils/api';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -427,6 +428,16 @@ export default function App() {
 
       {currentView === 'friends' && (
         <FriendsPage
+          accessibilityMode={accessibilityMode}
+        />
+      )}
+
+      {currentView === 'admin' && (
+        <CatalogAdmin
+          contents={contents}
+          onUpdateContents={setContents}
+          accessToken={accessToken}
+          onClose={() => setCurrentView('home')}
           accessibilityMode={accessibilityMode}
         />
       )}

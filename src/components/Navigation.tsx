@@ -1,4 +1,4 @@
-import { Film, Tv, Monitor, Settings, Search, User, LogOut, UserPlus } from 'lucide-react';
+import { Film, Tv, Monitor, Settings, Search, User, LogOut, UserPlus, Edit } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { GlassesIcon } from './GlassesIcon';
@@ -101,6 +101,13 @@ export function Navigation({ currentView, onNavigate, onSearch, accessibilityMod
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
                   Amigos
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => onNavigate('admin')}
+                  className="text-white hover:bg-gray-800 cursor-pointer"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Administrar Catálogo
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-700" />
                 <DropdownMenuItem 
