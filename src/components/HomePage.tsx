@@ -21,11 +21,38 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
       )
     : contents;
 
+  // Apply category filter
+  if (categoryFilter && !searchQuery) {
+    const categoryFiltered = contents.filter(c => c.category === categoryFilter);
+    filteredContents.splice(0, filteredContents.length, ...categoryFiltered);
+  }
+
   // Group contents by category
   const localContent = filteredContents.filter(c => c.isLocal);
   const documentaries = filteredContents.filter(c => c.category === 'Documental');
   const independent = filteredContents.filter(c => c.category === 'Independiente');
   const trending = filteredContents.filter(c => c.activeWatchParties > 0);
+
+  // Películas locales específicas en orden deseado
+  const specificLocalMovies = [
+    'Chavín de Huantar',      // id: '7'
+    'El Correcaminos',        // id: '20'
+    'Wiñaypacha',            // id: '21'
+    'Sombras del Pasado',    // id: '4'
+    'Risas de Barrio'        // id: '5'
+  ];
+
+  // Filtrar solo las 5 películas locales específicas en el orden deseado
+  const localMoviesDisplay = specificLocalMovies
+    .map(title => localContent.find(c => c.title === title))
+    .filter(Boolean) as Content[];
+
+  // Watch Parties activas - priorizar El Correcaminos y mostrar 4 total
+  const watchPartiesDisplay = trending.sort((a, b) => {
+    if (a.title === 'El Correcaminos') return -1;
+    if (b.title === 'El Correcaminos') return 1;
+    return b.activeWatchParties - a.activeWatchParties;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
@@ -122,13 +149,13 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
         {!searchQuery && !categoryFilter && (
           <>
             {/* Trending Watch Parties */}
-            {trending.length > 0 && (
+            {watchPartiesDisplay.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
                   Watch Parties Activas
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-                  {trending.slice(0, 4).map(content => (
+                  {watchPartiesDisplay.slice(0, 4).map(content => (
                     <ContentCard
                       key={content.id}
                       content={content}
@@ -142,13 +169,13 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
             )}
 
             {/* Local Content */}
-            {localContent.length > 0 && (
+            {localMoviesDisplay.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
                   Producciones Locales
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-                  {localContent.slice(0, 6).map(content => (
+                  {localMoviesDisplay.slice(0, 6).map(content => (
                     <ContentCard
                       key={content.id}
                       content={content}

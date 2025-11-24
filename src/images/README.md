@@ -8,33 +8,33 @@ Sube los siguientes archivos a esta carpeta:
 
 ### Películas Peruanas:
 - `chavinThumbnail.png` - Thumbnail para "Chavín de Huantar"
-- `elCorrecaminos.jpg` - Thumbnail para "El Correcaminos"
-- `winaypacha.jpg` - Thumbnail para "Wiñaypacha"
+- `elCorrecaminos.png` - Thumbnail para "El Correcaminos"
+- `winaypacha.png` - Thumbnail para "Wiñaypacha"
 
 ### Series Peruanas:
 - `misterioThumbnail.png` - Thumbnail para "Misterio"
-- `pataclaun.jpg` - Thumbnail para "Pataclaun"
-- `laGranSangre.jpg` - Thumbnail para "La Gran Sangre"
+- `pataclaun.png` - Thumbnail para "Pataclaun"
+- `laGranSangre.png` - Thumbnail para "La Gran Sangre"
 
 ### TV Shows Peruanos:
 - `alFondoThumbnail.png` - Thumbnail para "Al Fondo Hay Sitio"
-- `yoSoy.jpg` - Thumbnail para "Yo Soy"
+- `yoSoy.png` - Thumbnail para "Yo Soy"
 
 ### Películas Internacionales:
-- `elPadrino.jpg` - Thumbnail para "El Padrino"
-- `scarface.jpg` - Thumbnail para "Scarface"
-- `ironman.jpg` - Thumbnail para "Iron Man"
-- `losIncreibles.jpg` - Thumbnail para "Los Increíbles"
+- `elPadrino.png` - Thumbnail para "El Padrino"
+- `scarface.png` - Thumbnail para "Scarface"
+- `ironman.png` - Thumbnail para "Iron Man"
+- `losIncreibles.png` - Thumbnail para "Los Increíbles"
 
 ### Series Internacionales:
-- `breakingBad.jpg` - Thumbnail para "Breaking Bad"
-- `theBoys.jpg` - Thumbnail para "The Boys"
-- `avatar.jpg` - Thumbnail para "Avatar: La Leyenda de Aang"
-- `theOffice.jpg` - Thumbnail para "The Office"
+- `breakingBad.png` - Thumbnail para "Breaking Bad"
+- `theBoys.png` - Thumbnail para "The Boys"
+- `avatar.png` - Thumbnail para "Avatar: La Leyenda de Aang"
+- `theOffice.png` - Thumbnail para "The Office"
 
 ### TV Shows Internacionales:
-- `alf.jpg` - Thumbnail para "ALF"
-- `horaDeAventura.jpg` - Thumbnail para "Hora de Aventura"
+- `alf.png` - Thumbnail para "ALF"
+- `horaDeAventura.png` - Thumbnail para "Hora de Aventura"
 
 ## 🎨 Especificaciones técnicas:
 

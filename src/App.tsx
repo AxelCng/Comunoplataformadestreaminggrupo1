@@ -53,7 +53,7 @@ function AppContent() {
       duration: '52min',
       rating: 4.5,
       category: 'Documental',
-      isLocal: true,
+      isLocal: false,
       activeWatchParties: 2
     },
     {
@@ -131,7 +131,7 @@ function AppContent() {
       thumbnail: 'https://images.unsplash.com/photo-1715322608224-a9efaeeffaf7?w=1080&q=80',
       duration: '2h 20min',
       rating: 4.7,
-      category: 'Pel��cula',
+      category: 'Pelcula',
       isLocal: true,
       activeWatchParties: 0
     },
