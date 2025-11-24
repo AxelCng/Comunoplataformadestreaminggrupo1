@@ -1,7 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, X, Mic, MicOff, MessageSquare, MessageSquareOff } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, X, Mic, MicOff, MessageSquare, MessageSquareOff, Video, VideoOff, Check, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Slider } from './ui/slider';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { toast } from 'sonner@2.0.3';
 
 interface VideoPlayerProps {
   title: string;
@@ -10,6 +19,8 @@ interface VideoPlayerProps {
   accessibilityMode: boolean;
   isMicOn?: boolean;
   onMicToggle?: () => void;
+  isCameraOn?: boolean;
+  onCameraToggle?: () => void;
   isChatVisible?: boolean;
   onChatToggle?: () => void;
   onFullscreenChange?: (isFullscreen: boolean) => void;
@@ -22,6 +33,8 @@ export function VideoPlayer({
   accessibilityMode,
   isMicOn,
   onMicToggle,
+  isCameraOn,
+  onCameraToggle,
   isChatVisible,
   onChatToggle,
   onFullscreenChange
@@ -35,6 +48,32 @@ export function VideoPlayer({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Streaming options states
+  const [videoQuality, setVideoQuality] = useState<'auto' | '4K' | '1080p' | '720p' | '480p' | '360p'>('auto');
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+  const [subtitles, setSubtitles] = useState<'es' | 'en' | 'pt' | 'none'>('none');
+  const [audioTrack, setAudioTrack] = useState<'es' | 'en' | 'descriptive'>('es');
+
+  // Accordion states for settings menu
+  const [expandedSections, setExpandedSections] = useState<{
+    quality: boolean;
+    speed: boolean;
+    subtitles: boolean;
+    audio: boolean;
+  }>({
+    quality: false,
+    speed: false,
+    subtitles: false,
+    audio: false,
+  });
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   useEffect(() => {
     let interval: number | undefined;
@@ -112,6 +151,58 @@ export function VideoPlayer({
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, [onFullscreenChange]);
+
+  // Handlers for streaming options
+  const handleQualityChange = (quality: typeof videoQuality) => {
+    setVideoQuality(quality);
+    const qualityLabels = {
+      'auto': 'Automática',
+      '4K': '4K (2160p)',
+      '1080p': 'Full HD (1080p)',
+      '720p': 'HD (720p)',
+      '480p': 'SD (480p)',
+      '360p': 'Baja (360p)'
+    };
+    toast.success('Calidad de video cambiada', {
+      description: `Ahora reproduciendo en calidad ${qualityLabels[quality]}`,
+      closeButton: true
+    });
+  };
+
+  const handleSpeedChange = (speed: number) => {
+    setPlaybackSpeed(speed);
+    toast.success('Velocidad de reproducción cambiada', {
+      description: `Ahora reproduciendo a ${speed}x`,
+      closeButton: true
+    });
+  };
+
+  const handleSubtitlesChange = (subtitle: typeof subtitles) => {
+    setSubtitles(subtitle);
+    const subtitleLabels = {
+      'es': 'Español',
+      'en': 'Inglés',
+      'pt': 'Portugués',
+      'none': 'Sin subtítulos'
+    };
+    toast.success('Subtítulos cambiados', {
+      description: subtitleLabels[subtitle],
+      closeButton: true
+    });
+  };
+
+  const handleAudioTrackChange = (track: typeof audioTrack) => {
+    setAudioTrack(track);
+    const trackLabels = {
+      'es': 'Español (Original)',
+      'en': 'Inglés',
+      'descriptive': 'Audio descriptivo'
+    };
+    toast.success('Pista de audio cambiada', {
+      description: trackLabels[track],
+      closeButton: true
+    });
+  };
 
   return (
     <div 
@@ -259,6 +350,27 @@ export function VideoPlayer({
                 )}
               </Button>
             )}
+
+            {/* Camera Toggle - only show if handler provided */}
+            {onCameraToggle && (
+              <Button
+                variant={isCameraOn ? 'default' : 'ghost'}
+                size={accessibilityMode ? 'lg' : 'icon'}
+                onClick={onCameraToggle}
+                className={`${
+                  isCameraOn 
+                    ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+                    : 'text-white hover:bg-white/20'
+                }`}
+                aria-label={isCameraOn ? 'Desactivar cámara' : 'Activar cámara'}
+              >
+                {isCameraOn ? (
+                  <Video className={accessibilityMode ? 'w-6 h-6' : 'w-5 h-5'} />
+                ) : (
+                  <VideoOff className={accessibilityMode ? 'w-6 h-6' : 'w-5 h-5'} />
+                )}
+              </Button>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -278,14 +390,164 @@ export function VideoPlayer({
                 )}
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size={accessibilityMode ? 'lg' : 'icon'}
-              className="text-white hover:bg-white/20"
-              aria-label="Configuración de video"
-            >
-              <Settings className={accessibilityMode ? 'w-6 h-6' : 'w-5 h-5'} />
-            </Button>
+            
+            {/* Settings Dropdown Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size={accessibilityMode ? 'lg' : 'icon'}
+                  className="text-white hover:bg-white/20"
+                  aria-label="Configuración de video"
+                >
+                  <Settings className={accessibilityMode ? 'w-6 h-6' : 'w-5 h-5'} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                className="bg-gray-900 border-gray-700 text-white w-64 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
+                align="end"
+                sideOffset={8}
+              >
+                {/* Quality Section */}
+                <div className="border-b border-gray-800">
+                  <button
+                    onClick={() => toggleSection('quality')}
+                    className="w-full flex items-center justify-between px-3 py-3 hover:bg-gray-800 transition-colors"
+                  >
+                    <span className="text-sm">Calidad de video</span>
+                    {expandedSections.quality ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                  {expandedSections.quality && (
+                    <div className="pb-2">
+                      {(['auto', '4K', '1080p', '720p', '480p', '360p'] as const).map((quality) => (
+                        <DropdownMenuItem
+                          key={quality}
+                          onClick={() => handleQualityChange(quality)}
+                          className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 flex items-center justify-between px-3 py-2 mx-2"
+                        >
+                          <span>
+                            {quality === 'auto' ? 'Automática' : quality}
+                            {quality !== 'auto' && quality === '4K' && ' (2160p)'}
+                            {quality === '1080p' && ' - Full HD'}
+                            {quality === '720p' && ' - HD'}
+                          </span>
+                          {videoQuality === quality && (
+                            <Check className="w-4 h-4 text-purple-500" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Playback Speed Section */}
+                <div className="border-b border-gray-800">
+                  <button
+                    onClick={() => toggleSection('speed')}
+                    className="w-full flex items-center justify-between px-3 py-3 hover:bg-gray-800 transition-colors"
+                  >
+                    <span className="text-sm">Velocidad de reproducción</span>
+                    {expandedSections.speed ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                  {expandedSections.speed && (
+                    <div className="pb-2">
+                      {[0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map((speed) => (
+                        <DropdownMenuItem
+                          key={speed}
+                          onClick={() => handleSpeedChange(speed)}
+                          className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 flex items-center justify-between px-3 py-2 mx-2"
+                        >
+                          <span>{speed === 1 ? 'Normal' : `${speed}x`}</span>
+                          {playbackSpeed === speed && (
+                            <Check className="w-4 h-4 text-purple-500" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Subtitles Section */}
+                <div className="border-b border-gray-800">
+                  <button
+                    onClick={() => toggleSection('subtitles')}
+                    className="w-full flex items-center justify-between px-3 py-3 hover:bg-gray-800 transition-colors"
+                  >
+                    <span className="text-sm">Subtítulos</span>
+                    {expandedSections.subtitles ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                  {expandedSections.subtitles && (
+                    <div className="pb-2">
+                      {[
+                        { value: 'none' as const, label: 'Sin subtítulos' },
+                        { value: 'es' as const, label: 'Español' },
+                        { value: 'en' as const, label: 'Inglés' },
+                        { value: 'pt' as const, label: 'Portugués' }
+                      ].map((subtitle) => (
+                        <DropdownMenuItem
+                          key={subtitle.value}
+                          onClick={() => handleSubtitlesChange(subtitle.value)}
+                          className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 flex items-center justify-between px-3 py-2 mx-2"
+                        >
+                          <span>{subtitle.label}</span>
+                          {subtitles === subtitle.value && (
+                            <Check className="w-4 h-4 text-purple-500" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Audio Track Section */}
+                <div>
+                  <button
+                    onClick={() => toggleSection('audio')}
+                    className="w-full flex items-center justify-between px-3 py-3 hover:bg-gray-800 transition-colors"
+                  >
+                    <span className="text-sm">Pista de audio</span>
+                    {expandedSections.audio ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                  {expandedSections.audio && (
+                    <div className="pb-2">
+                      {[
+                        { value: 'es' as const, label: 'Español (Original)' },
+                        { value: 'en' as const, label: 'Inglés' },
+                        { value: 'descriptive' as const, label: 'Audio descriptivo' }
+                      ].map((audio) => (
+                        <DropdownMenuItem
+                          key={audio.value}
+                          onClick={() => handleAudioTrackChange(audio.value)}
+                          className="cursor-pointer hover:bg-gray-800 focus:bg-gray-800 flex items-center justify-between px-3 py-2 mx-2"
+                        >
+                          <span>{audio.label}</span>
+                          {audioTrack === audio.value && (
+                            <Check className="w-4 h-4 text-purple-500" />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button
               variant="ghost"
               size={accessibilityMode ? 'lg' : 'icon'}

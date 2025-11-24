@@ -49,6 +49,7 @@ export function WatchParty({
 }: WatchPartyProps) {
   const [hasStarted, setHasStarted] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false);
+  const [isCameraOn, setIsCameraOn] = useState(false);
   const [isChatVisible, setIsChatVisible] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
@@ -62,8 +63,10 @@ export function WatchParty({
     { id: '1', name: 'Tú', color: '#a855f7' },
   ]);
 
-  // Track participant states (camera/mic)
-  const [participantStates, setParticipantStates] = useState<Record<string, { cameraOn: boolean; micOn: boolean }>>({});
+  // Track participant states (camera/mic) - Initialize with user's own state
+  const [participantStates, setParticipantStates] = useState<Record<string, { cameraOn: boolean; micOn: boolean }>>({
+    '1': { cameraOn: false, micOn: false }
+  });
 
   // Mock friends list with additional data
   const friends = [
@@ -192,12 +195,41 @@ export function WatchParty({
 
   const toggleMic = () => {
     setIsMicOn(!isMicOn);
+    // Update participant states for the user
+    setParticipantStates(prev => ({
+      ...prev,
+      '1': {
+        ...prev['1'],
+        micOn: !isMicOn
+      }
+    }));
     toast.success(
       !isMicOn ? 'Micrófono activado' : 'Micrófono desactivado',
       {
         description: !isMicOn 
           ? 'Ahora puedes comunicarte por voz' 
           : 'Tu micrófono está silenciado',
+        closeButton: true
+      }
+    );
+  };
+
+  const toggleCamera = () => {
+    setIsCameraOn(!isCameraOn);
+    // Update participant states for the user
+    setParticipantStates(prev => ({
+      ...prev,
+      '1': {
+        ...prev['1'],
+        cameraOn: !isCameraOn
+      }
+    }));
+    toast.success(
+      !isCameraOn ? 'Cámara activada' : 'Cámara desactivada',
+      {
+        description: !isCameraOn 
+          ? 'Ahora puedes ver tu imagen' 
+          : 'Tu cámara está apagada',
         closeButton: true
       }
     );
@@ -702,6 +734,8 @@ export function WatchParty({
               accessibilityMode={accessibilityMode}
               isMicOn={isMicOn}
               onMicToggle={toggleMic}
+              isCameraOn={isCameraOn}
+              onCameraToggle={toggleCamera}
               isChatVisible={isChatVisible}
               onChatToggle={toggleChat}
               onFullscreenChange={handleFullscreenChange}
