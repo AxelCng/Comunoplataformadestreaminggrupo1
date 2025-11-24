@@ -6,14 +6,35 @@ Esta carpeta contiene todas las imágenes de thumbnails para las películas, ser
 
 Sube los siguientes archivos a esta carpeta:
 
-### Películas:
+### Películas Peruanas:
 - `chavinThumbnail.png` - Thumbnail para "Chavín de Huantar"
+- `elCorrecaminos.jpg` - Thumbnail para "El Correcaminos"
+- `winaypacha.jpg` - Thumbnail para "Wiñaypacha"
 
-### Series:
+### Series Peruanas:
 - `misterioThumbnail.png` - Thumbnail para "Misterio"
+- `pataclaun.jpg` - Thumbnail para "Pataclaun"
+- `laGranSangre.jpg` - Thumbnail para "La Gran Sangre"
 
-### TV Shows:
+### TV Shows Peruanos:
 - `alFondoThumbnail.png` - Thumbnail para "Al Fondo Hay Sitio"
+- `yoSoy.jpg` - Thumbnail para "Yo Soy"
+
+### Películas Internacionales:
+- `elPadrino.jpg` - Thumbnail para "El Padrino"
+- `scarface.jpg` - Thumbnail para "Scarface"
+- `ironman.jpg` - Thumbnail para "Iron Man"
+- `losIncreibles.jpg` - Thumbnail para "Los Increíbles"
+
+### Series Internacionales:
+- `breakingBad.jpg` - Thumbnail para "Breaking Bad"
+- `theBoys.jpg` - Thumbnail para "The Boys"
+- `avatar.jpg` - Thumbnail para "Avatar: La Leyenda de Aang"
+- `theOffice.jpg` - Thumbnail para "The Office"
+
+### TV Shows Internacionales:
+- `alf.jpg` - Thumbnail para "ALF"
+- `horaDeAventura.jpg` - Thumbnail para "Hora de Aventura"
 
 ## 🎨 Especificaciones técnicas:
 

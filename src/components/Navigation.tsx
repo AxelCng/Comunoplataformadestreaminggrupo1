@@ -1,4 +1,5 @@
 import { Film, Tv, Monitor, Settings, Search, User, LogOut, UserPlus } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { GlassesIcon } from './GlassesIcon';
@@ -12,55 +13,59 @@ import {
 } from './ui/dropdown-menu';
 
 interface NavigationProps {
-  currentView: string;
-  onNavigate: (view: string) => void;
   onSearch: (query: string) => void;
   accessibilityMode: boolean;
   onLogout: () => void;
 }
 
-export function Navigation({ currentView, onNavigate, onSearch, accessibilityMode, onLogout }: NavigationProps) {
+export function Navigation({ onSearch, accessibilityMode, onLogout }: NavigationProps) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <nav className="bg-black/95 border-b border-gray-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <button 
-              onClick={() => onNavigate('home')}
+            <Link 
+              to="/"
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               aria-label="Ir a inicio"
             >
               <GlassesIcon className="w-8 h-8 text-white" />
               <ComunoText className="text-white hidden sm:block" />
-            </button>
+            </Link>
 
             {/* Main Navigation */}
             <div className="hidden md:flex items-center gap-0.5">
-              <Button
-                variant={currentView === 'movies' ? 'secondary' : 'ghost'}
-                onClick={() => onNavigate('movies')}
-                className={`text-white hover:text-white hover:bg-white/10 ${currentView === 'movies' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
-              >
-                <Film className="w-4 h-4 mr-1.5" />
-                Películas
-              </Button>
-              <Button
-                variant={currentView === 'series' ? 'secondary' : 'ghost'}
-                onClick={() => onNavigate('series')}
-                className={`text-white hover:text-white hover:bg-white/10 ${currentView === 'series' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
-              >
-                <Tv className="w-4 h-4 mr-1.5" />
-                Series
-              </Button>
-              <Button
-                variant={currentView === 'tvshows' ? 'secondary' : 'ghost'}
-                onClick={() => onNavigate('tvshows')}
-                className={`text-white hover:text-white hover:bg-white/10 ${currentView === 'tvshows' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
-              >
-                <Monitor className="w-4 h-4 mr-1.5" />
-                TV Shows
-              </Button>
+              <Link to="/movies">
+                <Button
+                  variant={currentPath === '/movies' ? 'secondary' : 'ghost'}
+                  className={`text-white hover:text-white hover:bg-white/10 ${currentPath === '/movies' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
+                >
+                  <Film className="w-4 h-4 mr-1.5" />
+                  Películas
+                </Button>
+              </Link>
+              <Link to="/series">
+                <Button
+                  variant={currentPath === '/series' ? 'secondary' : 'ghost'}
+                  className={`text-white hover:text-white hover:bg-white/10 ${currentPath === '/series' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
+                >
+                  <Tv className="w-4 h-4 mr-1.5" />
+                  Series
+                </Button>
+              </Link>
+              <Link to="/tvshows">
+                <Button
+                  variant={currentPath === '/tvshows' ? 'secondary' : 'ghost'}
+                  className={`text-white hover:text-white hover:bg-white/10 ${currentPath === '/tvshows' ? 'bg-white/20' : ''} ${accessibilityMode ? 'text-base px-5 py-5' : 'text-sm px-3'}`}
+                >
+                  <Monitor className="w-4 h-4 mr-1.5" />
+                  TV Shows
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -88,20 +93,22 @@ export function Navigation({ currentView, onNavigate, onSearch, accessibilityMod
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-gray-900 border-gray-700">
-                <DropdownMenuItem 
-                  onClick={() => onNavigate('settings')}
-                  className="text-white hover:bg-gray-800 cursor-pointer"
-                >
-                  <Settings className="w-4 h-4 mr-2" />
-                  Configuración
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => onNavigate('friends')}
-                  className="text-white hover:bg-gray-800 cursor-pointer"
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Amigos
-                </DropdownMenuItem>
+                <Link to="/settings">
+                  <DropdownMenuItem 
+                    className="text-white hover:bg-gray-800 cursor-pointer"
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configuración
+                  </DropdownMenuItem>
+                </Link>
+                <Link to="/friends">
+                  <DropdownMenuItem 
+                    className="text-white hover:bg-gray-800 cursor-pointer"
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Amigos
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator className="bg-gray-700" />
                 <DropdownMenuItem 
                   onClick={onLogout}
@@ -117,27 +124,30 @@ export function Navigation({ currentView, onNavigate, onSearch, accessibilityMod
 
         {/* Mobile Navigation */}
         <div className="md:hidden flex gap-2 pb-3">
-          <Button
-            variant={currentView === 'movies' ? 'secondary' : 'ghost'}
-            size="sm"
-            onClick={() => onNavigate('movies')}
-          >
-            <Film className="w-4 h-4" />
-          </Button>
-          <Button
-            variant={currentView === 'series' ? 'secondary' : 'ghost'}
-            size="sm"
-            onClick={() => onNavigate('series')}
-          >
-            <Tv className="w-4 h-4" />
-          </Button>
-          <Button
-            variant={currentView === 'tvshows' ? 'secondary' : 'ghost'}
-            size="sm"
-            onClick={() => onNavigate('tvshows')}
-          >
-            <Monitor className="w-4 h-4" />
-          </Button>
+          <Link to="/movies">
+            <Button
+              variant={currentPath === '/movies' ? 'secondary' : 'ghost'}
+              size="sm"
+            >
+              <Film className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link to="/series">
+            <Button
+              variant={currentPath === '/series' ? 'secondary' : 'ghost'}
+              size="sm"
+            >
+              <Tv className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Link to="/tvshows">
+            <Button
+              variant={currentPath === '/tvshows' ? 'secondary' : 'ghost'}
+              size="sm"
+            >
+              <Monitor className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>

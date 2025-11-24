@@ -73,7 +73,7 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
         {categoryFilter && (
           <div>
             <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
-              {categoryFilter === 'Película' ? '🎬 Películas' : categoryFilter === 'Serie' ? '📺 Series' : '📺 TV Shows'}
+              {categoryFilter === 'Película' ? 'Películas' : categoryFilter === 'Serie' ? 'Series' : 'TV Shows'}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {filteredContents.map(content => (
@@ -125,7 +125,7 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
             {trending.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
-                  🎉 Watch Parties Activas
+                  Watch Parties Activas
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
                   {trending.slice(0, 4).map(content => (
@@ -145,10 +145,10 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
             {localContent.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
-                  🌟 Producciones Locales
+                  Producciones Locales
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
-                  {localContent.slice(0, 4).map(content => (
+                  {localContent.slice(0, 6).map(content => (
                     <ContentCard
                       key={content.id}
                       content={content}
@@ -165,7 +165,7 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
             {documentaries.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
-                  📽️ Documentales
+                  Documentales
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
                   {documentaries.slice(0, 4).map(content => (
@@ -185,7 +185,7 @@ export function HomePage({ contents, onPlayContent, onJoinWatchParty, accessibil
             {independent.length > 0 && (
               <section>
                 <h2 className={`text-white mb-4 ${accessibilityMode ? 'text-2xl' : 'text-xl'}`}>
-                  🎬 Cine Independiente
+                  Cine Independiente
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
                   {independent.slice(0, 4).map(content => (
