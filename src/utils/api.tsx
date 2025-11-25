@@ -13,22 +13,35 @@ export const supabase = createClient(
 export const authAPI = {
   // Sign up new user
   signUp: async (email: string, password: string, name: string) => {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${publicAnonKey}`
-      },
-      body: JSON.stringify({ email, password, name })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name
+        }
+      }
     });
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error || 'Error al registrar usuario');
+    if (error) {
+      // Translate common Supabase error messages to Spanish
+      let errorMessage = error.message;
+      
+      if (error.message.includes('User already registered')) {
+        errorMessage = 'Este email ya está registrado. Intenta iniciar sesión';
+      } else if (error.message.includes('Invalid email')) {
+        errorMessage = 'Email inválido';
+      } else if (error.message.includes('Password should be at least')) {
+        errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+      }
+      
+      throw new Error(errorMessage);
     }
 
-    return data;
+    return {
+      user: data.user,
+      session: data.session
+    };
   },
 
   // Sign in with email and password
@@ -43,11 +56,11 @@ export const authAPI = {
       let errorMessage = error.message;
       
       if (error.message.includes('Invalid login credentials')) {
-        errorMessage = 'Credenciales incorrectas. Verifica tu email y contraseña';
+        errorMessage = 'Email o contraseña incorrectos. Si no tienes cuenta, regístrate primero';
       } else if (error.message.includes('Email not confirmed')) {
-        errorMessage = 'Email no confirmado';
+        errorMessage = 'Por favor confirma tu email antes de iniciar sesión';
       } else if (error.message.includes('User not found')) {
-        errorMessage = 'Usuario no encontrado';
+        errorMessage = 'Usuario no encontrado. ¿Ya te registraste?';
       } else if (error.message.includes('Invalid email')) {
         errorMessage = 'Email inválido';
       } else if (error.message.includes('too many requests')) {
@@ -97,6 +110,54 @@ export const authAPI = {
     }
 
     return data.user;
+  },
+
+  // Reset password
+  resetPassword: async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      // Translate common Supabase error messages to Spanish
+      let errorMessage = error.message;
+      
+      if (error.message.includes('User not found')) {
+        errorMessage = 'No se encontró una cuenta con ese email';
+      } else if (error.message.includes('Invalid email')) {
+        errorMessage = 'Email inválido';
+      } else if (error.message.includes('too many requests')) {
+        errorMessage = 'Demasiados intentos. Por favor espera un momento';
+      }
+      
+      throw new Error(errorMessage);
+    }
+
+    return { success: true };
+  },
+
+  // Update password (for password reset flow)
+  updatePassword: async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) {
+      // Translate common Supabase error messages to Spanish
+      let errorMessage = error.message;
+      
+      if (error.message.includes('New password should be different')) {
+        errorMessage = 'La nueva contraseña debe ser diferente a la anterior';
+      } else if (error.message.includes('Password should be at least')) {
+        errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+      } else if (error.message.includes('Unable to validate')) {
+        errorMessage = 'Sesión inválida. Solicita un nuevo enlace de recuperación';
+      }
+      
+      throw new Error(errorMessage);
+    }
+
+    return { success: true };
   }
 };
 

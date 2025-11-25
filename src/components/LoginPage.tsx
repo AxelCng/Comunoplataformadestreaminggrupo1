@@ -10,6 +10,13 @@ import { GlassesIcon } from './GlassesIcon';
 import { ComunoText } from './ComunoText';
 import { toast } from 'sonner@2.0.3';
 import { authAPI } from '../utils/api';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 interface LoginPageProps {
   onLogin: (username: string, userId: string, accessToken: string) => void;
@@ -26,6 +33,9 @@ export function LoginPage({ onLogin, accessibilityMode, onToggleAccessibility }:
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,12 +113,40 @@ export function LoginPage({ onLogin, accessibilityMode, onToggleAccessibility }:
     }
   };
 
-  const handleGuestLogin = () => {
-    toast.info('Ingresando como invitado', {
-      description: 'Algunas funciones pueden estar limitadas',
-      closeButton: true
-    });
-    onLogin('Invitado', 'guest', '');
+  const handleForgotPassword = () => {
+    setIsForgotPasswordOpen(true);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!resetEmail.trim()) {
+      toast.error('Por favor ingresa tu email', {
+        closeButton: true
+      });
+      return;
+    }
+
+    setIsResetting(true);
+
+    try {
+      await authAPI.resetPassword(resetEmail);
+      
+      toast.success('¡Email de recuperación enviado!', {
+        description: 'Revisa tu bandeja de entrada para restablecer tu contraseña',
+        closeButton: true
+      });
+      
+      setIsForgotPasswordOpen(false);
+    } catch (error: any) {
+      console.error('Reset password error:', error);
+      toast.error('Error al enviar el email de recuperación', {
+        description: error.message || 'Intenta con otro email',
+        closeButton: true
+      });
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -276,6 +314,7 @@ export function LoginPage({ onLogin, accessibilityMode, onToggleAccessibility }:
                     </div>
                     <button
                       type="button"
+                      onClick={() => setIsForgotPasswordOpen(true)}
                       className={`text-purple-400 hover:text-purple-300 ${
                         accessibilityMode ? 'text-base' : 'text-sm'
                       }`}
@@ -398,31 +437,6 @@ export function LoginPage({ onLogin, accessibilityMode, onToggleAccessibility }:
               </TabsContent>
             </Tabs>
 
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-700" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className={`bg-gray-900 px-4 text-gray-400 ${
-                  accessibilityMode ? 'text-base' : 'text-sm'
-                }`}>
-                  o
-                </span>
-              </div>
-            </div>
-
-            {/* Guest Access */}
-            <Button
-              variant="outline"
-              onClick={handleGuestLogin}
-              className={`w-full border-gray-700 bg-gray-800/50 text-white hover:bg-gray-800 hover:text-white ${
-                accessibilityMode ? 'text-lg py-6' : ''
-              }`}
-            >
-              Continuar como Invitado
-            </Button>
-
             <p className={`text-center text-gray-500 mt-4 ${
               accessibilityMode ? 'text-base' : 'text-xs'
             }`}>
@@ -431,6 +445,49 @@ export function LoginPage({ onLogin, accessibilityMode, onToggleAccessibility }:
           </Card>
         </div>
       </div>
+
+      {/* Forgot Password Dialog */}
+      <Dialog open={isForgotPasswordOpen} onOpenChange={setIsForgotPasswordOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Recuperar Contraseña</DialogTitle>
+            <DialogDescription>
+              Ingresa tu email para recibir un enlace de recuperación.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label 
+                htmlFor="reset-email" 
+                className={`text-white ${accessibilityMode ? 'text-lg' : ''}`}
+              >
+                Email
+              </Label>
+              <Input
+                id="reset-email"
+                type="email"
+                placeholder="tu@email.com"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                className={`bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 ${
+                  accessibilityMode ? 'text-lg py-6' : ''
+                }`}
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className={`w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 ${
+                accessibilityMode ? 'text-xl py-7' : 'text-lg py-6'
+              }`}
+              disabled={isResetting}
+            >
+              {isResetting ? 'Enviando...' : 'Enviar Email de Recuperación'}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

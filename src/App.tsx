@@ -6,6 +6,7 @@ import { WatchParty } from './components/WatchParty';
 import { WatchPartyList } from './components/WatchPartyList';
 import { AccessibilitySettings } from './components/AccessibilitySettings';
 import { LoginPage } from './components/LoginPage';
+import { ResetPasswordPage } from './components/ResetPasswordPage';
 import { FriendsPage } from './components/FriendsPage';
 import { HelpButton } from './components/HelpButton';
 import { Content } from './components/ContentCard';
@@ -482,11 +483,21 @@ function AppContent() {
   if (!isLoggedIn) {
     return (
       <>
-        <LoginPage
-          onLogin={handleLogin}
-          accessibilityMode={accessibilityMode}
-          onToggleAccessibility={handleToggleAccessibility}
-        />
+        <Routes>
+          <Route path="/" element={
+            <LoginPage
+              onLogin={handleLogin}
+              accessibilityMode={accessibilityMode}
+              onToggleAccessibility={handleToggleAccessibility}
+            />
+          } />
+          <Route path="/reset-password" element={
+            <ResetPasswordPage
+              accessibilityMode={accessibilityMode}
+            />
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         <HelpButton accessibilityMode={accessibilityMode} />
         <Toaster position="bottom-right" />
       </>

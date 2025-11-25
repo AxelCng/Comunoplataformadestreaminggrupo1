@@ -659,10 +659,6 @@
     margin-block: calc(var(--spacing) * 1);
   }
 
-  .my-6 {
-    margin-block: calc(var(--spacing) * 6);
-  }
-
   .mt-0\.5 {
     margin-top: calc(var(--spacing) * .5);
   }
@@ -1658,6 +1654,16 @@
     background-color: var(--color-green-500);
   }
 
+  .bg-green-500\/20 {
+    background-color: color-mix(in srgb, oklch(.723 .219 149.579) 20%, transparent);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-green-500\/20 {
+      background-color: color-mix(in oklab, var(--color-green-500) 20%, transparent);
+    }
+  }
+
   .bg-green-500\/80 {
     background-color: color-mix(in srgb, oklch(.723 .219 149.579) 80%, transparent);
   }
@@ -2383,6 +2389,10 @@
 
   .text-green-400 {
     color: var(--color-green-400);
+  }
+
+  .text-green-500 {
+    color: var(--color-green-500);
   }
 
   .text-muted-foreground {
@@ -3466,6 +3476,12 @@
   @media (width >= 40rem) {
     .sm\:max-w-lg {
       max-width: var(--container-lg);
+    }
+  }
+
+  @media (width >= 40rem) {
+    .sm\:max-w-md {
+      max-width: var(--container-md);
     }
   }
 
