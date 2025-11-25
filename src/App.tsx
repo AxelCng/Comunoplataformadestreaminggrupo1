@@ -590,7 +590,7 @@ function AppContent() {
           <AccessibilitySettings
             accessibilityMode={accessibilityMode}
             onToggleAccessibility={handleToggleAccessibility}
-            onClose={() => setShowAccessibilitySettings(false)}
+            onClose={() => navigate(-1)}
           />
         } />
       </Routes>

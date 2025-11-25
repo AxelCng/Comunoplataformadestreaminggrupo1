@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
@@ -14,7 +15,8 @@ import {
   X, 
   Clock,
   MessageSquare,
-  Video
+  Video,
+  ArrowLeft
 } from 'lucide-react';
 import {
   Dialog,
@@ -48,6 +50,8 @@ interface FriendsPageProps {
 }
 
 export function FriendsPage({ accessibilityMode }: FriendsPageProps) {
+  const navigate = useNavigate();
+  
   const [friends, setFriends] = useState<Friend[]>([
     {
       id: '1',
@@ -195,6 +199,17 @@ export function FriendsPage({ accessibilityMode }: FriendsPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black">
       <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
+        {/* Back Button */}
+        <Button
+          onClick={() => navigate(-1)}
+          variant="ghost"
+          className="text-white hover:bg-gray-800 mb-6"
+          size={accessibilityMode ? 'lg' : 'default'}
+        >
+          <ArrowLeft className={`${accessibilityMode ? 'w-6 h-6 mr-3' : 'w-4 h-4 mr-2'}`} />
+          Volver
+        </Button>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
